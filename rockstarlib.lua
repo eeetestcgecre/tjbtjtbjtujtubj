@@ -1151,14 +1151,25 @@ do
             end;
 
             local State = KeyPicker:GetState();
+            local ActiveColor = Library.AccentColor:Lerp(
+                Color3.new(1,1,1),
+                0.20 -- 20% brighter
+            )
 
+            local InactiveColor = Library.AccentColor:Lerp(
+                Color3.new(0,0,0),
+                0.35 -- 35% darker
+            )
             ContainerLabel.Text = string.format('[%s] %s (%s)', KeyPicker.Value, Info.Text, KeyPicker.Mode);
 
             ContainerLabel.Visible = KeyPicker.Value ~= "None"
-            ContainerLabel.TextColor3 = State and Library.AccentColor or Library.FontColor;
-
-            Library.RegistryMap[ContainerLabel].Properties.TextColor3 = State and 'AccentColor' or 'FontColor';
-
+            ContainerLabel.TextColor3 =
+                State and ActiveColor or InactiveColor
+            Library.RegistryMap[ContainerLabel].Properties.TextColor3 = function()
+                return KeyPicker:GetState()
+                    and Library.AccentColor:Lerp(Color3.new(1,1,1),0.20)
+                    or Library.AccentColor:Lerp(Color3.new(0,0,0),0.35)
+            end
             local YSize = 0
             local XSize = 0
 
